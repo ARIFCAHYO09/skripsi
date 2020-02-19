@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+	<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Perbandingan Algoritma</title>
+	</head>
+	<body>
+	<nav class="navbar navbar-expand-lg navbar-light" style="background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,1,131,1) 45%, rgba(0,185,255,1) 100%, rgba(0,212,255,1) 100%);">
+		<a class="navbar-brand" href="#" style="color: white">
+			<span class="fa fas fa-map-marker" style="font-size: 18pt"></span> Perbandingan Algoritma 
+		</a>
+	 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span style="color: white">
+	    	<i class="fa fa-navicon"></i>
+	    </span>
+  		</button>
+		<div class="collapse navbar-collapse " id="navbarSupportedContent">
+			<ul class="navbar-nav ml-auto" data-toggle="modal" data-target="#myModal">
+			    <li class="nav-item active">
+			        <a class="nav-link" href="#dijkstra" style="color: white">Dijkstra<span class="sr-only">(current)</span></a>
+	    		</li>
+			    <li class="nav-item">
+			    	<a class="nav-link" href="#astar" href="#" style="color: white">A* Eucledian</a>
+			    </li>
+			    <li class="nav-item">
+			    	<a class="nav-link" href="#astar" href="#" style="color: white">A* Manhattan</a>
+			    </li>
+			</ul>    
+		</div>		 
+	</nav>
+<!-- Button trigger modal -->
+	<div class="jumbotron jumbotron-fluid" style="background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,1,131,1) 45%, rgba(0,185,255,1) 100%, rgba(0,212,255,1) 100%);margin-bottom:0%;">
+		<div class="container">
+			<div class="row">
+			<div class="col-md-9">
+	    	<h1 class="display-4" style="color: white">Perbandingan Algoritma</h1>
+	    	<p class="lead" style="color: white">Silahakan Telusuri lokasi di peta dengan algoritma yang telah di sediakan <span class="btn-outline-warning" data-toggle="modal" data-target="#exampleModalCenter">
+				  <span class="fa fas fa-search"></span>
+				  <b>Telusuri Sekarang</b>
+			</span> 
+			</p>
+			</div>
+			<div class="col-md-1">
+				<center>
+				<img src="/assets/img/banner.png"width="300px">
+				</center>
+			</div>
+			</div>
+	    </div>
+	    <br>
+	    <br>
+
+	     <div class=" " style="text-align: right;margin-bottom: -4%; ">
+			<span onclick="zoomin()" class=" btn-outline-primary zoom" style="color: white; margin-right:1%"><span class="fa fas fa-search-minus"></span> Zoom In</span>		
+			<span onclick="zoomout()" class=" btn-outline-primary zoom2" style="color: white;margin-right: 5%"><span class="fa fas fa-search-plus"></span> Zoom Out</span>
+		</div>	   
+	</div>
+	<section id="map" style="background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,1,131,1) 45%, rgba(0,185,255,1) 100%, rgba(0,212,255,1) 100%);">
+		<center>
+		<div style="overflow: scroll; width: 90%; height: 31rem; border: 2px solid blue;">
+		<canvas id="peta" width="getwidth()" height="getheight()"  style=""></canvas>
+		</div>
+	</center>
+		<br>
+		<div class="row justify-content-center" style="color: white">
+		<div style="margin-right: 15px;">Keterangan : </div>
+		 <div style="margin-right: 5px; background-color: #3490dc;width: 20px; height: 20px; margin-top: 2px;"></div>
+		 <div style="margin-right: 5px;" onclick="alg=alg*-1;game();">Dijkstra </div>
+		 <div style="margin-right: 5px; background-color: #5cb85c;width: 20px; height: 20px; margin-top: 2px;"></div>
+		 <div style="margin-right: 5px;" onclick="alg1=alg1*-1;game();">Astar Manhattan </div>
+		 <div style="margin-right: 5px; background-color: #d9534f;width: 20px; height: 20px; margin-top: 2px;"></div>
+		 <div onclick="alg2=alg2*-1;game();">Astar Euclidean </div>
+		 </div>
+		 
+	</section>	
+		
+	<div class="jumbotron jumbotron-fluid " style="margin-top: 3;background-color: white">
+		<div class="container card">
+		<h1 class="display-4">Detail Perhitungan</h1>
+		<p class="lead">Klik Tampil untuk menampilkan detail perhitungan ke sistem pada peta <a href="#map">				
+		 <button onclick="hitung()" class="btn btn-primary"><span class="fa fas fa-window-restore"></span> Tampil</button></a>
+
+		</p>
+		<br>
+		
+		<br>
+		<div class="row justify-content-center">
+			<div class="col-md-4">
+				<h1 class="text-center">Dijkstra</h1>
+				<p id="demo" class="btn btn-outline-primary bg-white" style="overflow: auto;width: 100%; height: 60px; max-height: 60px; color: black;">Rutenya Adalah :</p>
+				<br>
+				<p id="jalan" class="btn btn-outline-primary bg-white" style="overflow: scroll;width: 100%; height: 60px; color: black;" >Jalannya Adalah : </p>
+				<br>
+				<p id="waktu" style="overflow: scroll;width: 100%; color: black;" >Waktu Respon : 0 ms</p>
+				<br>
+				<p id="closelist" style="overflow: scroll;width: 100%; color: black;" >Closelist : 0</p>
+				<br>
+				<p id="Memory_usage" style="overflow: scroll;width: 100%; color: black;" >Memory Usage : 0</p>
+			</div>
+
+			<div class="col-md-4">
+				<h1 class="text-center">A Star Manhattan</h1>
+				<p id="demo1" class="btn btn-outline-primary bg-white" style="overflow: auto;width: 100%; height: 60px; color: black;">Rutenya Adalah :</p>
+				<br>
+				<p id="jalan1" class="btn btn-outline-primary bg-white" style="overflow: scroll;width: 100%; height: 60px; color: black;" >Jalannya Adalah : </p>
+				<br>
+				<p id="waktu1" style="overflow: scroll;width: 100%; color: black;" >Waktu Respon : 0 ms</p>
+				<br>
+				<p id="closelist1" style="overflow: scroll;width: 100%; color: black;" >Closelist : 0</p>
+				<br>
+				<p id="Memory_usage1" style="overflow: scroll;width: 100%; color: black;" >Memory Usage : 0</p>
+			</div>
+
+			<div class="col-md-4">
+				<h1 class="text-center">A Star Euclidean</h1>
+				<p id="demo2" class="btn btn-outline-primary bg-white" style="overflow: auto;width: 100%; height: 60px; color: black;">Rutenya Adalah :</p>
+				<br>
+				<p id="jalan2" class="btn btn-outline-primary bg-white" style="overflow: scroll;width: 100%; height: 60px; color: black;" >Jalannya Adalah : </p>
+				<br>
+				<p id="waktu2" style="overflow: scroll;width: 100%; color: black;" >Waktu Respon : 0 ms</p>
+				<br>
+				<p id="closelist2" style="overflow: scroll;width: 100%; color: black;" >Closelist : 0</p>
+				<br>
+				<p id="Memory_usage2" style="overflow: scroll;width: 100%; color: black;" >Memory Usage : 0</p>
+			</div>
+
+		</div>
+		</div>
+		</div>
+	</div>
+	<footer class="jumbotron-fluid bg-primary text-white" >
+		<div>			
+		<center>2019 Created By Arif Cahyo Prasetyo Powered by Bootstrap And Font Awesome</center>
+		</div>
+	</footer>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/assets/js/jquery-3.3.1.slim.min.js" ></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/js/rutefix.js"></script>
+	<script type="text/javascript" src="/assets/js/ruteastarfix.js"></script>
+	<script type="text/javascript" src="/assets/js/ruteastarfix2.js"></script>
+  </body>
+</html>
+
+
+<script>
+	class titik {
+		constructor(id,x,y,block,parentid,g,h,jalan) {
+			this.id=id;
+			this.x=x;
+			this.y=y;
+			this.block=block;
+			this.parentid=parentid
+			this.g=g;
+			this.h=h;
+			this.jalan = jalan;
+		}
+	}
+	class lok {
+		constructor(nama,titik_posisi) {
+			this.nama=nama;
+			this.titik_posisi=titik_posisi;
+		}
+	}
+	class jalan {
+		constructor(id,nama) {
+			this.id=id;
+			this.nama=nama;
+		}
+	}
+	node = [];
+	lokasi=[];
+	jalans=[];
+	{{#each vertex}}
+		node[node.length] = new titik({{id}}, {{x}}, {{y}},{{block}},null,null,null,{{jalan}});
+	{{/each}}
+	{{#each locat}}
+		lokasi[lokasi.length] = new lok('{{nama}}', {{titik_posisi}} );
+	{{/each}}
+	{{#each ways}}
+		jalans[jalans.length] = new jalan({{id}}, '{{nama}}');
+	{{/each}}
+	console.log(node[node.length-1].x);
+	var perhitungan = -1;
+	var kotak=10;
+	var alg = 1;
+	var alg1 = 1;
+	var alg2 = 1;
+	window.onload=function () {
+		canv=document.getElementById("peta");
+		canv.width = kotak+node[node.length-1].x*kotak;
+		canv.height =kotak+node[node.length-1].y*kotak;
+		ctx=canv.getContext("2d");	
+		game();
+	}
+	function getRndInteger(min, max) {
+  			return Math.floor(Math.random() * (max - min)) + min;
+		}
+	var vh = [];
+	var vh1 = [];
+	var vh2 = [];
+	var vh3 = [];
+	var rutesatudua = [];
+	var rutesatutiga= [];
+	var ruteduatiga = [];
+	var rutesatuduatiga = [];
+	var rute =[];
+	var rutesatu = [];
+	var rutedua = [];
+	var rutetiga = [];
+	
+	
+	function game() {
+		if(rute.length<1) {
+			for(var i=0;i<node.length;i++) {
+				if(node[i].block==1) {
+					ctx.fillStyle="#E0E0E0";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+				}
+				if(node[i].block==0) {
+					ctx.fillStyle="white";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+					}
+				}
+			}
+		} else {
+			for(var i=0;i<node.length;i++) {
+				if(node[i].block==1) {
+					ctx.fillStyle="#E0E0E0";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+				}
+				if(node[i].block==0) {
+					ctx.fillStyle="white";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+					
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+					}
+				}
+				if(rutesatu.includes(node[i].id-1) && alg==1) {
+					ctx.fillStyle="#3490dc";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutedua.includes(node[i].id-1) && alg1==1) {
+					ctx.fillStyle="#5cb85c";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutetiga.includes(node[i].id-1) && alg2==1) {
+					ctx.fillStyle="#d9534f";
+					ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak);
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutedua.includes(node[i].id-1) && alg1==1 && alg==1 && rutesatu.includes(node[i].id-1)) {
+					kkk=caribelok(node[i].id-1, rutesatudua);
+					if(vh2[kkk]=="vertikal") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh2[kkk]=="horizontal") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh2[kkk]=="kiri ke atas") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh2[kkk]=="kanan ke bawah") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh2[kkk]=="kiri ke bawah") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh2[kkk]=="kanan ke atas") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+					}
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutetiga.includes(node[i].id-1) && alg2==1 && alg==1 && rutesatu.includes(node[i].id-1)) {
+					kkk=caribelok(node[i].id-1, rutesatutiga);
+					if(vh1[kkk]=="vertikal") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh1[kkk]=="horizontal") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh1[kkk]=="kiri ke atas") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh1[kkk]=="kanan ke bawah") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh1[kkk]=="kiri ke bawah") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh1[kkk]=="kanan ke atas") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+					}
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutetiga.includes(node[i].id-1) && alg2==1 && alg1==1 && rutedua.includes(node[i].id-1)) {
+					kkk=caribelok(node[i].id-1, ruteduatiga);
+					if(vh[kkk]=="vertikal") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh[kkk]=="horizontal") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh[kkk]=="kiri ke atas") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh[kkk]=="kanan ke bawah") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak);
+					}
+					if(vh[kkk]=="kiri ke bawah") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/2,kotak);
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak,kotak/2);
+					}
+					if(vh[kkk]=="kanan ke atas") {
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/2);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+kotak/2,node[i].y*kotak+kotak/2,kotak/2,kotak/2);
+					}
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+				if(rutetiga.includes(node[i].id-1) && alg2==1 && alg==1 && alg1==1 && rutedua.includes(node[i].id-1) && rutesatu.includes(node[i].id-1) ) {
+					kkk=caribelok(node[i].id-1, rutesatuduatiga);
+					if(vh3[kkk]=="vertikal") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/3,kotak);
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak,kotak/3,kotak);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak,kotak/3,kotak);
+					}
+					if(vh3[kkk]=="horizontal") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/3);
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/3,kotak,kotak/3);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+2*(kotak/3),kotak/3,kotak);
+					}
+					if(vh3[kkk]=="kiri ke atas") { //bener
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/3,kotak/3);
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak,kotak/3,kotak/3);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+(kotak/3),2*(kotak/3),kotak/3);
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak,kotak/3,kotak);
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak+2*(kotak/3),2*(kotak/3),kotak/3);
+					}
+					if(vh3[kkk]=="kiri ke bawah") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak,kotak/3);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+kotak/3,kotak/3,2*(kotak/3));
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak+(kotak/3),(kotak/3),2*(kotak/3));
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak+2*(kotak/3),(kotak/3),kotak/3);
+					}
+					if(vh3[kkk]=="kanan ke atas") { //bener
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/3,kotak);
+						ctx.fillRect(node[i].x*kotak+(kotak/3),node[i].y*kotak,2*kotak/3,(kotak/3));
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak+kotak/3,kotak/3,kotak/3);
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak+kotak/3,kotak/3,2*(kotak/3));
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak+2*(kotak/3),kotak/3,kotak/3);
+					}
+					if(vh3[kkk]=="kanan ke bawah") {
+						ctx.fillStyle="#3490dc";
+						ctx.fillRect(node[i].x*kotak+2*(kotak/3),node[i].y*kotak,kotak/3,kotak/3);
+						ctx.fillStyle="#5cb85c";
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak+2*(kotak/3),kotak/3,kotak/3);
+						ctx.fillRect(node[i].x*kotak+kotak/3,node[i].y*kotak,(kotak/3),2*(kotak/3));
+						ctx.fillStyle="#d9534f";
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak+2*(kotak/3),kotak,kotak/3);
+						ctx.fillRect(node[i].x*kotak,node[i].y*kotak,kotak/3,2*(kotak/3));
+					}
+					if(perhitungan==1) {
+						ctx.fillStyle="black";
+						ctx.fillText("id="+(node[i].id-1),(node[i].x*kotak+22),(node[i].y*kotak+10));
+						ctx.fillText("x="+node[i].x,(node[i].x*kotak+22),(node[i].y*kotak+20));
+						ctx.fillText("y="+node[i].y,(node[i].x*kotak+22),(node[i].y*kotak+30));
+						ctx.fillText("g="+node[i].g,(node[i].x*kotak+22),(node[i].y*kotak+40));
+						ctx.fillText("h="+parseFloat(node[i].h).toFixed(2),(node[i].x*kotak+22),(node[i].y*kotak+50));
+
+					}
+				}
+			}
+		}
+		for(var i=0; i<lokasi.length;i++) {
+			ctx.fillStyle="black";
+						ctx.beginPath();
+						ctx.arc(node[lokasi[i].titik_posisi-1].x*kotak,node[lokasi[i].titik_posisi-1].y*kotak,kotak/2, 0, 2 * Math.PI);
+						ctx.stroke();
+						ctx.fill();
+						ctx.textAlign = "center";
+						ctx.fillText(lokasi[i].nama,(node[lokasi[i].titik_posisi-1].x*kotak),(node[lokasi[i].titik_posisi-1].y*kotak)+kotak);
+		}							
+	}
+
+	function zoomout() {
+		if(kotak>10) {
+			kotak=kotak-10;
+			canv.width = kotak+node[node.length-1].x*kotak;
+			canv.height= kotak+node[node.length-1].y*kotak;
+			game();
+		}
+		else {
+			alert("zoom out maksimal");
+		}
+	}
+	function zoomin() {
+		if(kotak<100) {
+		kotak=kotak+10;
+		canv.width = kotak+node[node.length-1].x*kotak;
+		canv.height= kotak+node[node.length-1].y*kotak;
+		game();
+		}
+	}
+	function SelectElement(id, idd)
+	{    
+	    var element = document.getElementById(id);
+	    var elements=document.getElementById(idd);
+	    var elementss = element.value;
+	    element.value = elements.value;
+	    elements.value = elementss;
+	}
+	function pilih_algoritma(a,s,d) {
+		hapus();
+		var timestart= performance.now();
+		var openlist = [];
+		var closelist = [];
+		var memory=0;
+		vh=[];
+		vh1=[];
+		vh2=[];
+		vh3=[];
+		rutesatu=[];
+		rutedua=[];
+		rutetiga=[];
+		rutesatudua=[];
+		rutesatuduatiga=[];
+		ruteduatiga=[];
+		rutesatutiga=[];
+		if(a=="Semua") {
+			cari_rute(s,d);
+			rutesatu=rute;
+			cari_ruteman(s,d);
+			rutedua=rute;
+			cari_ruteu(s,d);
+			rutetiga=rute;
+			for(var a=0;a<rutedua.length;a++) {
+				if(rutesatu.includes(rutedua[a])) {
+					rutesatudua[rutesatudua.length]=rutedua[a];
+				}
+				if(rutetiga.includes(rutedua[a])) {
+					ruteduatiga[ruteduatiga.length]=rutedua[a];
+				}
+				if(rutesatu.includes(rutedua[a]) && rutetiga.includes(rutedua[a])) {
+					rutesatuduatiga[rutesatuduatiga.length]=rutedua[a];
+				}
+			}
+			for (var a=0;a<rutesatu.length;a++) {
+				if(rutetiga.includes(rutesatu[a])) {
+					rutesatutiga[rutesatutiga.length]=rutesatu[a];
+				}
+			}
+			tulisbelok(ruteduatiga,vh);
+			tulisbelok(rutesatutiga,vh1);
+			tulisbelok(rutesatudua,vh2);
+			tulisbelok(rutesatuduatiga,vh3);
+			console.log(ruteduatiga);
+			console.log(vh);
+		}
+		if(a=="Dijkstra") {
+			cari_rute(s,d);
+			rutesatu=rute;
+		}
+		if(a=="Astar Manhattan") {
+			cari_ruteman(s,d);
+			rutedua=rute;
+		}
+		if(a=="Astar Euclidean") {
+			cari_ruteu(s,d);
+			rutetiga=rute;
+		}
+		game();
+	}
+	function hitung() {
+		perhitungan=perhitungan*-1;
+		game();
+	}
+	function hapus() {
+	document.getElementById("jalan").innerHTML = "jalannya adalah : ";
+	document.getElementById("demo").innerHTML = "rutenya adalah : ";
+	document.getElementById("closelist").innerHTML = "Closelist : ";
+	document.getElementById("waktu").innerHTML = "Waktu Respon : ";
+	document.getElementById("Memory_usage").innerHTML = "Memory Usage :  ";
+	document.getElementById("jalan1").innerHTML = "jalannya adalah : ";
+	document.getElementById("demo1").innerHTML = "rutenya adalah : ";
+	document.getElementById("closelist1").innerHTML = "Closelist : ";
+	document.getElementById("waktu1").innerHTML = "Waktu Respon : ";
+	document.getElementById("Memory_usage1").innerHTML = "Memory Usage :  ";
+	document.getElementById("jalan2").innerHTML = "jalannya adalah : ";
+	document.getElementById("demo2").innerHTML = "rutenya adalah : ";
+	document.getElementById("closelist2").innerHTML = "Closelist : ";
+	document.getElementById("waktu2").innerHTML = "Waktu Respon : ";
+	document.getElementById("Memory_usage2").innerHTML = "Memory Usage :  ";
+	}
+	function belok(a,b) {
+		if(Math.abs(b-a)==106)
+			return "horizontal";
+		if(Math.abs(b-a)==-1)
+			return "vertikal";
+	}
+	function belok(a,b,c) {
+		if((b-a==106 && b-c==1) || (b-a==-1 && b-c==106))
+			return "kiri ke atas";
+		else if((b-a==106 && b-c==-1) || (b-a==1 && b-c==106))
+			return "kanan ke bawah";
+		else if(b-a==-106 && b-c==-1)
+			return "kiri ke bawah";
+		else if(b-a==-1 && b-c==-106)
+			return "kanan ke atas";
+		else if(Math.abs(b-a)==106)
+			return "horizontal";
+		else if(Math.abs(b-a)==1)
+			return "vertikal";
+	}
+	function tulisbelok(a,b) {
+		b[b.length]=belok(a[0],a[1]);
+		for(i=1;i<a.length-1;i++) {
+			b[b.length]=belok(a[i-1],a[i],a[i+1]);
+		}
+		b[b.length]=belok(a[a.length-2],a[a.length-1]);
+	}
+	function caribelok(a,b) {
+		for(i=0;i<b.length;i++) {
+			if(b[i]==a) {
+				return i;
+				break;
+			}
+		}
+	}
+	console.log(navigator)
+</script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center bg-dark">
+        <h5 class="modal-title " id="exampleModalCenterTitle" style="color: white">Masukan Tujuan & Algoritma</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color: white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+			   <center>
+					<div class="row">
+			   		`	<div class="btn btn-info">
+      						<span class="fa fas fa-street-view" style="font-size: 14pt"></span>
+				   			<select name="start" id="start" class="btn-info">
+									{{#each locat}}
+										<option class='' style='color: white' value={{'titik_jalan'}}>{{'nama'}}</option>
+									{{/each}}
+								
+							</select>						
+						</div>			
+				   	</div>					
+					<br>
+					<button onclick="SelectElement('start','dest')" class="btn btn-warning"><span class="fa fas fa-refresh"></span> Balik</button>
+					<br>
+					<br>
+					<div style="float: right;">						
+						<div class="row">
+					   		<div class="btn btn-info" >
+      							<span class="fa fas fa-map-marker" style="font-size: 14pt"></span>
+									<select name="dest" id="dest" class="btn-info">
+										{{#each locat}}
+										<option class='' style='color: white' value={{'titik_jalan'}}>{{'nama'}}</option>
+										{{/each}}
+									</select>
+							   </div>
+						</div>
+					</div>
+					
+
+			</center>
+      </div>
+      <div class="modal-footer ">
+      	<div class="row">
+			<div class="btn btn-secondary">
+      			<span class="fa fas fa-cogs" style="font-size: 12pt"></span>
+					<select id="algoritma" class="btn-secondary">
+						<option class="" style="color: white"> Dijkstra</option>
+						<option class="" style="color: white">Astar Manhattan</option>
+						<option class="" style="color: white">Astar Euclidean</option>
+						<option class="" style="color: white">Semua</option>
+					</select> 
+				</div>				
+			</div>
+        <button data-dismiss="modal" class="btn btn-primary" onclick="pilih_algoritma(
+			document.getElementById('algoritma').options[document.getElementById('algoritma').selectedIndex].value,
+			document.getElementById('start').options[document.getElementById('start').selectedIndex].value, 
+			document.getElementById('dest').options[document.getElementById('dest').selectedIndex].value)"><span class="fa fas fa-search"></span> Telusuri </button>
+      </div>
+    </div>
+  </div></div>
+
+  <div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title" id="dijkstra">Algoritma Pencarian Rute Terdekat</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body Dijkstra-->
+      <div class="modal-body">
+       <h1 class="text-center">Algoritma Pencarian Rute Terdekat<h1>
+<p style="font-size: 12pt" class="text-justify" >
+Open List adalah titik yang boleh dilalui contohnya,titik yang belum dilalui dan titik tersebut bukanlah tembok,close list adalah titik yang telah dilalui,fungsi dari close list adalah agar algoritma tersebut tidak mengecek lagi titik yang sudah dilalui sehingga pencarian lebih cepat dan tidak ada perulangan tak terbatas
+<br>
+<br>
+Algoritma Djikstra dibuat oleh Edsger Dijkstra. Dijkstra digunakan untuk mencari rute terpendek . Algoritma Dijkstra termasuk algoritma rakus (greedy) yang dapat digunakan ketika graph mempunyai garis(edge) yang berbobot positif dan mempunyai arah. Algoritma ini bekerja dengan mengunjungi semua titik yang ada sampai ditemukannya titik tujuan dan membuat rutenya jika ada 2 rute menuju 1 titik yang sama maka rute yang memiliki bobot terendahlah yang dipilih sedangkan rute yang lainnya akan tetap dilanjutkan pencariannya hingga titik akhir ditemukan. sehingga semua titik mempunyai rute yang optimal. Pencarian ini berlangsung sampai titik tujuan terakhir telah ditemukan. Kelemahan dari algoritma ini adalah tidak terpusatnya pencarian,sehingga proses pencarian akan berlangsung lama dan mempunyai jumlah langkah yang besar.
+</p>
+<p style="font-size: 12pt" class="text-justify" id="astar"> Algoritma A* dikembangkan oleh Hart, Nilsson, dan Raphael, algoritma ini paling popular dan telah digunakan secara luas dalam graph traversal, penemuan jalur, serta proses perencanaannya.Algoritma A Star(*) memanfaatkan pencarian heuristik untuk menentukan rute terdekatnya sehingga pencarian rute dapat dilakukan lebih cepat dan efisien. Heuristik adalah bidang dari kecerdasan buatan. dengan menggunakan pencarian ini ,waktu yang dibutuhkan lebih sedikit dan jumlah langkahnya lebih sedikit.Hal ini disebabkan oleh pencarian memprioritaskan kemungkinan terbaik sehingga solusi lebih cepat ditemukan. Contoh dari Heuristik yang popular digunakan pada algoritma astar adalah Manhattan, Euclidean,Octile dan Chebysev.
+<br>
+<br>
+heuristic manhattan hanya akan menjumlahkan selisih nilai x dan y pada dua titik.sesuai dengan namanya rumus ini berasal dari kata manhattan.manhattan adalah sebuah daerah di negara amerika serikat yang padat penduduknya,untuk menghitung jarak terdekat dari dua titik akan dihitung dengan menjumlahkan setiap blok yang harus dilalui, pergerakan secara diagonal tidak boleh dilakukan.
+<br>
+<br>
+rumus heuristic euclidean memiliki dasar teori yang cukup kuat yaitu teorema pitagoris, jarak terdekat dari suatu titik tujuan akan dianggap sisi miring dari segitiga siku-siku,selanjutnya nilai sisi miring dicari dengan menjumlahkan akar kuadrat dari panjang dan tinggi segitiga. 
+
+</p>
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
